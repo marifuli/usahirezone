@@ -2,6 +2,7 @@
 
 A production-ready, SEO-first US Job Board built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS**, and **Firebase (Firestore, Authentication, Storage)**.
 
+
 ---
 
 ## 🌟 Key Features
