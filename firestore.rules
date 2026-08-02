@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Public read access for jobs, companies, categories, states, cities
+    match /jobs/{jobId} {
+      allow read: if true;
+      allow write: if true; // Allow initial seeding and updates
+    }
+
+    match /companies/{companyId} {
+      allow read: if true;
+      allow write: if true; // Allow initial seeding
+    }
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /states/{stateId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /cities/{cityId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /questionnaires/{questionnaireId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Applications: Anyone (including guests) can submit an application
+    match /applications/{applicationId} {
+      allow create: if true;
+      allow read: if isSignedIn() && (
+        resource.data.userId == request.auth.uid || request.auth.token.admin == true
+      );
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // User Profiles
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // Saved Jobs
+    match /saved_jobs/{savedJobId} {
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow read, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+  }
+}
