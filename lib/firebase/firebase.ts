@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator, type Firestore } from "firebase/firestore";
+import { initializeFirestore, connectFirestoreEmulator, type Firestore } from "firebase/firestore";
 import { getAuth, connectAuthEmulator, type Auth } from "firebase/auth";
 import { getStorage, connectStorageEmulator, type FirebaseStorage } from "firebase/storage";
 
@@ -21,7 +21,9 @@ function getFirebaseApp(): FirebaseApp {
 }
 
 export const app = getFirebaseApp();
-export const db: Firestore = getFirestore(app);
+export const db: Firestore = initializeFirestore(app, {
+  experimentalAutoDetectLongPolling: true,
+});
 export const auth: Auth = getAuth(app);
 export const storage: FirebaseStorage = getStorage(app);
 
